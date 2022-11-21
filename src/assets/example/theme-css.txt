@@ -6,36 +6,49 @@ h1 {
 }
 /* 二级标题样式 */
 h2 {
+  margin: 1em auto;
+  color: rgb(24, 129, 87);
+  background-color: rgb(180, 193, 202) !important;
+  padding: 6px;
 }
 /* 三级标题样式 */
 h3 {
+  border-left: 3px solid rgb(24, 129, 87);
 }
 /* 四级标题样式 */
 h4 {
+  color: rgb(24, 129, 87);
 }
 /* 图片样式 */
 image {
 }
 /* 引用样式 */
 blockquote {
+  padding: 0px 1em;
+  margin: 0px 20px;
+  text-indent: 1em;
 }
 /* 引用段落样式 */
 blockquote_p {
 }
 /* 段落样式 */
 p {
+  text-indent: 1em;
 }
 /* 分割线样式 */
 hr {
 }
 /* 行内代码样式 */
 codespan {
+  color: rgb(24, 129, 87);
 }
 /* 粗体样式 */
 strong {
+  color: rgb(24, 129, 87);
 }
 /* 链接样式 */
 link {
+  color: rgb(24, 129, 87);
 }
 /* 微信链接样式 */
 wx_link {
@@ -51,4 +64,5 @@ li {
 }
 /* 代码块样式 */
 code {
+  color: rgb(24, 129, 87);
 }

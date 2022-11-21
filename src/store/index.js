@@ -141,6 +141,52 @@ const mutations = {
     })
   },
   editorRefresh(state) {
+    marked.use({
+      extensions: [
+        {
+          name: `cite`,
+          level: `block`,
+          start(src) {
+            return src.match(/^&\[(.*?)\]\((.*?)\)/)?.index
+          },
+          tokenizer(src) {
+            const rule = /^&\[(.*?)\]\((.*?)\)(?:\n|$)/
+            const match = rule.exec(src)
+            if (match) {
+              return {
+                type: `cite`,
+                raw: match[0],
+                title: match[1],
+                link: match[2],
+              }
+            }
+            return null
+          },
+          renderer(token) {
+            const { title, link } = token
+            return `<div style="word-break: break-word; line-height: 1.6;">
+            <a href="${link}" target="_blank" style="position:relative; display:flex; box-sizing:border-box; flex-direction:row; -webkit-box-align:center; align-items:center; width:390px; min-height:84px; border-radius:8px; max-width:100%; overflow:hidden; margin:16px auto; padding:12px 12px 9px 12px; background-color:#F6F6F6; text-decoration: none;">
+                <span style="display: block; flex: 1 1 auto; position: relative; -webkit-box-flex: 1;">
+                    <span class="two-line" style="display: -webkit-box; font-size: 15px; font-weight: 500; line-height: 1.4; margin-bottom: 2px; color: #121212; text-overflow: ellipsis; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-height: 20px; -webkit-line-clamp: 2;">
+                        ${title}
+                    </span>
+                    <span style="display: -webkit-box; font-size: 13px; height: 18px; line-height: 18px; color: #999999; word-break: break-all; text-overflow: ellipsis; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
+                        <span style="display: inline-flex; align-items: center;">
+                            &ZeroWidthSpace;
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="Zi Zi--InsertLink" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.327 18.883a3.005 3.005 0 0 1 0-4.25l2.608-2.607a.75.75 0 1 0-1.06-1.06l-2.608 2.607a4.505 4.505 0 0 0 6.37 6.37l2.608-2.607a.75.75 0 0 0-1.06-1.06l-2.608 2.607a3.005 3.005 0 0 1-4.25 0Zm5.428-11.799a.75.75 0 0 0 1.06 1.06L14.48 5.48a3.005 3.005 0 0 1 4.25 4.25l-2.665 2.665a.75.75 0 0 0 1.061 1.06l2.665-2.664a4.505 4.505 0 0 0-6.371-6.372l-2.665 2.665Zm5.323 2.117a.75.75 0 1 0-1.06-1.06l-7.072 7.07a.75.75 0 0 0 1.061 1.06l7.071-7.07Z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </span>${link}
+                    </span>
+                </span>
+            </a>
+        </div>`
+          },
+        },
+      ],
+    })
     const renderer = state.wxRenderer.getRenderer(state.citeStatus)
     marked.setOptions({ renderer })
     let output = marked.parse(state.editor.getValue(0))
