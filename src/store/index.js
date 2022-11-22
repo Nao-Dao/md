@@ -169,13 +169,18 @@ const mutations = {
             const { text, data } = token
             let a = ``
             data.forEach((v, i) => {
-              a += `<div>${this.parser.parseInline(v)}</div>`
+              if (v == ``) {
+                a += `<p></p>`
+              } else {
+                a += `<div>${this.parser.parseInline(v)}</div>`
+              }
             })
             return `<div style="
             border: 2px solid rgb(174, 197, 195);
             border-radius: 9px;
-            padding: 10px;
-            text-align: center;
+            padding: 15px;
+            text-align: left;
+            text-indent: 1em;
         ">${a}</div>`
           },
         },
