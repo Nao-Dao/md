@@ -144,6 +144,42 @@ const mutations = {
     marked.use({
       extensions: [
         {
+          name: `box`,
+          level: `block`,
+          start(src) {
+            return src.match(/^hh((?:.|\n)*?)hh(?:\n|$)/)?.index
+          },
+          tokenizer(src) {
+            const rule = /^hh((?:.|\n)*?)hh(?:\n|$)/
+            const match = rule.exec(src)
+            if (match) {
+              const data = match[1]
+                .split(`\n`)
+                .map((v) => this.lexer.inlineTokens(v))
+              return {
+                type: `box`,
+                raw: match[0],
+                text: match[1],
+                data: data,
+              }
+            }
+            return null
+          },
+          renderer(token) {
+            const { text, data } = token
+            let a = ``
+            data.forEach((v, i) => {
+              a += `<div>${this.parser.parseInline(v)}</div>`
+            })
+            return `<div style="
+            border: 2px solid rgb(174, 197, 195);
+            border-radius: 9px;
+            padding: 10px;
+            text-align: center;
+        ">${a}</div>`
+          },
+        },
+        {
           name: `cite`,
           level: `block`,
           start(src) {
@@ -156,7 +192,7 @@ const mutations = {
               return {
                 type: `cite`,
                 raw: match[0],
-                title: match[1],
+                title: this.lexer.inlineTokens(match[1].trim()),
                 link: match[2],
               }
             }
@@ -168,7 +204,7 @@ const mutations = {
             <a href="${link}" target="_blank" style="position:relative; display:flex; box-sizing:border-box; flex-direction:row; -webkit-box-align:center; align-items:center; width:390px; min-height:84px; border-radius:8px; max-width:100%; overflow:hidden; margin:16px auto; padding:12px 12px 9px 12px; background-color:#F6F6F6; text-decoration: none;">
                 <span style="display: block; flex: 1 1 auto; position: relative; -webkit-box-flex: 1;">
                     <span class="two-line" style="display: -webkit-box; font-size: 15px; font-weight: 500; line-height: 1.4; margin-bottom: 2px; color: #121212; text-overflow: ellipsis; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-height: 20px; -webkit-line-clamp: 2;">
-                        ${title}
+                        ${this.parser.parseInline(title)}
                     </span>
                     <span style="display: -webkit-box; font-size: 13px; height: 18px; line-height: 18px; color: #999999; word-break: break-all; text-overflow: ellipsis; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
                         <span style="display: inline-flex; align-items: center;">
