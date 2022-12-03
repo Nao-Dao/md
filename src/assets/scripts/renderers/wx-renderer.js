@@ -44,7 +44,13 @@ class WxRenderer {
     };
 
     let addFootnote = (title, link) => {
-      footnotes.push([++footnoteIndex, title, link]);
+      // check
+      let rep = false;
+      footnotes.forEach((v) => {
+        if (v[1] == title && v[2] == link) rep = true;
+      });
+      if (!rep) footnotes.push([++footnoteIndex, title, link]);
+      console.log(footnotes);
       return footnoteIndex;
     };
 

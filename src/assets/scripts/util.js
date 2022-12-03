@@ -336,21 +336,23 @@ export function checkImage(file) {
   // check filename suffix
   const isValidSuffix = /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.name)
   if (!isValidSuffix) {
-    return {
-      ok: false,
-      msg: `请上传 JPG/PNG/GIF 格式的图片`,
+    // return {
+    //   ok: false,
+    //   msg: `请上传 JPG/PNG/GIF 格式的图片`,
+    // }
+    return { ok: true }
+  } else {
+    // check file size
+    const maxSize = 10
+    const valid = file.size / 1024 / 1024 <= maxSize
+    if (!valid) {
+      return {
+        ok: false,
+        msg: `由于公众号限制，图片大小不能超过 ${maxSize}M`,
+      }
     }
   }
 
-  // check file size
-  const maxSize = 10
-  const valid = file.size / 1024 / 1024 <= maxSize
-  if (!valid) {
-    return {
-      ok: false,
-      msg: `由于公众号限制，图片大小不能超过 ${maxSize}M`,
-    }
-  }
   return { ok: true }
 }
 

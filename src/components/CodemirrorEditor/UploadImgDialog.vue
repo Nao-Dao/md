@@ -27,7 +27,7 @@
           :headers="{ 'Content-Type': 'multipart/form-data' }"
           :show-file-list="false"
           :multiple="true"
-          accept=".jpg, .jpeg, .png, .gif"
+          accept="*"
           name="file"
           :before-upload="beforeImageUpload"
           :http-request="uploadImage"
