@@ -141,7 +141,213 @@ export const useStore = defineStore(`store`, {
         },
       })
     },
+
     editorRefresh() {
+      marked.use({
+        extensions: [
+          {
+            name: `small_img`,
+            level: `inline`,
+            start(src) {
+              return src.match(/^!s\[(.*?)\]\(.*?\)$/)?.index
+            },
+            tokenizer(src) {
+              const rule = /^!s\[(.*?)\]\((.*?)\)$/
+              const match = rule.exec(src)
+              if (match) {
+                return {
+                  type: `small_img`,
+                  raw: match[0],
+                  text: match[1],
+                  href: match[2],
+                }
+              }
+              return null
+            },
+            renderer(token) {
+              const { text, href } = token
+              return `<section style="margin: 1.5em 8px; text-align: center;">
+                <section style="width: 50%; margin: 0 auto;">
+                  <img style="width: 100% !important;" src="${href}" title="${text}" alt="${text}" />
+                </section></section>`
+            },
+          },
+          {
+            name: `y_highlight`,
+            level: `inline`,
+            start(src) {
+              return src.match(/^y\[(.*?)\]/)?.index
+            },
+            tokenizer(src) {
+              const rule = /^y\[(.*?)\]/
+              const match = rule.exec(src)
+              if (match) {
+                const data = match[1]
+                  .split(`\n`)
+                  .map((v) => this.lexer.inlineTokens(v))
+                return {
+                  type: `y_highlight`,
+                  raw: match[0],
+                  text: match[1],
+                  data: data,
+                }
+              }
+              return null
+            },
+            renderer(token) {
+              const { text, data } = token
+              return `<section style="font-size: 16px;
+              color: rgb(255, 169, 0);
+              font-weight: 700;
+              line-height: 46px;
+              text-align: center;">${text}</section>`
+            },
+          },
+          {
+            name: `g_highlight`,
+            level: `inline`,
+            start(src) {
+              return src.match(/^g\[(.*?)\]/)?.index
+            },
+            tokenizer(src) {
+              const rule = /^g\[(.*?)\]/
+              const match = rule.exec(src)
+              if (match) {
+                const data = match[1]
+                  .split(`\n`)
+                  .map((v) => this.lexer.inlineTokens(v))
+                return {
+                  type: `g_highlight`,
+                  raw: match[0],
+                  text: match[1],
+                  data: data,
+                }
+              }
+              return null
+            },
+            renderer(token) {
+              const { text, data } = token
+              return `<section style="font-size: 16px;
+              color: rgb(24, 129, 87);
+              font-weight: 700;
+              line-height: 46px;
+              word-wrap: wrap;
+              text-align: center;">${text}</section>`
+            },
+          },
+          {
+            name: `c_no_render`,
+            level: `inline`,
+            start(src) {
+              return src.match(/^c\[(.*?)\]/)?.index
+            },
+            tokenizer(src) {
+              const rule = /^c\[(.*?)\]/
+              const match = rule.exec(src)
+              if (match) {
+                const data = match[1]
+                  .split(`\n`)
+                  .map((v) => this.lexer.inlineTokens(v))
+                return {
+                  type: `c_no_render`,
+                  raw: match[0],
+                  text: match[1],
+                  data: data,
+                }
+              }
+              return null
+            },
+            renderer(token) {
+              const { text, data } = token
+              return `${text}`
+            },
+          },
+          {
+            name: `box`,
+            level: `block`,
+            start(src) {
+              return src.match(/^<<<((?:.|\n)*?)>>>(?:\n|$)/)?.index
+            },
+            tokenizer(src) {
+              const rule = /^<<<((?:.|\n)*?)>>>(?:\n|$)/
+              const match = rule.exec(src)
+              if (match) {
+                const data = match[1]
+                  .split(`\n`)
+                  .map((v) => this.lexer.inlineTokens(v))
+                return {
+                  type: `box`,
+                  raw: match[0],
+                  text: match[1],
+                  data: data,
+                }
+              }
+              return null
+            },
+            renderer(token) {
+              const { text, data } = token
+              let a = ``
+              data.forEach((v, i) => {
+                if (v == ``) {
+                  a += `<section>&nbsp;</section>`
+                } else {
+                  a += `<section>${this.parser.parseInline(v)}</section>`
+                }
+              })
+              return `<section style="
+              font-family: Calibri;
+              border-radius: 9px;
+              text-align: left;
+              background-image: linear-gradient(90deg, rgb(24, 129, 87), rgb(219, 249, 246));
+              padding: 2px;
+              line-height: 2em;
+          "><section style="background-color: white; border-radius: 8px; padding: 15px;">${a}</section></section>`
+            },
+          },
+          {
+            name: `cite`,
+            level: `inline`,
+            start(src) {
+              return src.match(/^&\[(.*?)\]\((.*?)\)/)?.index
+            },
+            tokenizer(src) {
+              const rule = /^&\[(.*?)\]\((.*?)\)(?:\n|$)/
+              const match = rule.exec(src)
+              if (match) {
+                return {
+                  type: `cite`,
+                  raw: match[0],
+                  title: this.lexer.inlineTokens(match[1].trim()),
+                  link: match[2],
+                }
+              }
+              return null
+            },
+            renderer(token) {
+              const { title, link } = token
+              return `<section style="word-break: break-word; line-height: 1.6;">
+              <a href="${link}" target="_blank" style="position:relative; display:flex; box-sizing:border-box; flex-direction:row; -webkit-box-align:center; align-items:center; width:390px; min-height:84px; border-radius:8px; max-width:100%; overflow:hidden; margin:16px auto; padding:12px 12px 9px 12px; background-color:#F6F6F6; text-decoration: none;">
+                  <span style="display: block; flex: 1 1 auto; position: relative; -webkit-box-flex: 1;">
+                      <span class="two-line" style="display: -webkit-box; font-size: 15px; font-weight: 500; line-height: 1.4; margin-bottom: 2px; color: #121212; text-overflow: ellipsis; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-height: 20px; -webkit-line-clamp: 2;">
+                          ${this.parser.parseInline(title)}
+                      </span>
+                      <span style="display: -webkit-box; font-size: 13px; height: 18px; line-height: 18px; color: #999999; word-break: break-all; text-overflow: ellipsis; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
+                          <span style="display: inline-flex; align-items: center;">
+                              &ZeroWidthSpace;
+                              <svg width="14" height="14" viewBox="0 0 24 24" class="Zi Zi--InsertLink" fill="currentColor">
+                                  <path fill-rule="evenodd"
+                                      d="M5.327 18.883a3.005 3.005 0 0 1 0-4.25l2.608-2.607a.75.75 0 1 0-1.06-1.06l-2.608 2.607a4.505 4.505 0 0 0 6.37 6.37l2.608-2.607a.75.75 0 0 0-1.06-1.06l-2.608 2.607a3.005 3.005 0 0 1-4.25 0Zm5.428-11.799a.75.75 0 0 0 1.06 1.06L14.48 5.48a3.005 3.005 0 0 1 4.25 4.25l-2.665 2.665a.75.75 0 0 0 1.061 1.06l2.665-2.664a4.505 4.505 0 0 0-6.371-6.372l-2.665 2.665Zm5.323 2.117a.75.75 0 1 0-1.06-1.06l-7.072 7.07a.75.75 0 0 0 1.061 1.06l7.071-7.07Z"
+                                      clip-rule="evenodd"></path>
+                              </svg>
+                          </span>${link}
+                      </span>
+                  </span>
+              </a>
+          </section>`
+            },
+          },
+        ],
+      })
       const renderer = this.wxRenderer.getRenderer(this.citeStatus)
       marked.setOptions({ renderer })
       let output = marked.parse(this.editor.getValue(0))

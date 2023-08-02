@@ -8,26 +8,29 @@ export default {
   block: {
     // 一级标题样式
     h1: {
-      'font-size': `1.2em`,
+      'font-size': `20px`,
       'text-align': `center`,
       'font-weight': `bold`,
       display: `table`,
       margin: `2em auto 1em`,
-      padding: `0 1em`,
-      'border-bottom': `2px solid rgba(0, 152, 116, 0.9)`,
-      color: baseColor,
+      color: `rgb(24, 129, 87)`,
+      'line-height': `22px`,
+      'letter-spacing': `1px`,
+      'word-break': `normal !important`,
+      border: `none`,
+      'border-bottom': `none`,
+      position: `relative`,
     },
 
     // 二级标题样式
     h2: {
-      'font-size': `1.2em`,
-      'text-align': `center`,
+      'font-size': `18px`,
+      'text-align': `left`,
       'font-weight': `bold`,
       display: `table`,
-      margin: `4em auto 2em`,
-      padding: `0 0.2em`,
-      background: `rgba(0, 152, 116, 0.9)`,
-      color: `#fff`,
+      margin: `24px 16px 8px 0`,
+      color: `rgb(24, 129, 87)`,
+      'font-family': `Inter-SemiBold`,
     },
 
     // 三级标题样式
@@ -54,17 +57,19 @@ export default {
       margin: `1.5em 8px`,
       'letter-spacing': `0.1em`,
       color: baseColor,
+      'text-indent': `1em`,
     },
 
     // 引用样式
     blockquote: {
       'font-style': `normal`,
       'border-left': `none`,
-      padding: `1em`,
+      padding: `0px 1em`,
       'border-radius': `8px`,
       color: `rgba(0,0,0,0.5)`,
       background: `#f7f7f7`,
-      margin: `2em 8px`,
+      margin: `0px 20px`,
+      'text-indent': `1em`,
     },
 
     blockquote_p: {
@@ -137,15 +142,15 @@ export default {
 
     codespan: {
       'font-size': `90%`,
-      color: `#d14`,
+      color: `#BE5123`,
       background: `rgba(27,31,35,.05)`,
       padding: `3px 5px`,
       'border-radius': `4px`,
-      'word-break': `break-all`,
+      'word-break': `break-word`,
     },
 
     link: {
-      color: `#576b95`,
+      color: `rgb(24, 129, 87)`,
     },
 
     wx_link: {
@@ -155,8 +160,14 @@ export default {
 
     // 字体加粗样式
     strong: {
-      color: `rgba(15, 76, 129, 0.9)`,
       'font-weight': `bold`,
+      'font-family': `Optima-Regular, PingFangTC-light`,
+      'letter-spacing': `2px`,
+      'background-color': `rgb(24, 129, 87)`,
+      color: `rgb(255, 255, 255)`,
+      'box-sizing': `border-box !important`,
+      'overflow-wrap': `break-word !important`,
+      'word-break': `break-word`,
     },
 
     table: {

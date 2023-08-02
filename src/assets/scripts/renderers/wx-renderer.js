@@ -97,6 +97,11 @@ class WxRenderer {
     this.getRenderer = (status) => {
       footnotes = [];
       footnoteIndex = 0;
+      let storeH1 = 0,
+          storeH2 = 0,
+          storeH3 = 0,
+          storeH4 = 0;
+      const autoId = false;
 
       styleMapping = this.buildTheme(this.opts.theme);
       let renderer = new Renderer();
@@ -104,13 +109,28 @@ class WxRenderer {
       renderer.heading = (text, level) => {
         switch (level) {
           case 1:
-            return `<h1 ${getStyles("h1")}>${text}</h1>`;
+            storeH1 += 1;
+            storeH2 = 0;
+            return `<h1 ${getStyles("h1")}><section style="
+              width: 19px;
+              height: 10px;
+              margin: 0 0 0 4px;">
+            <img src="http://insula.oss-cn-chengdu.aliyuncs.com/2023/08/02/1690939678433-8110c1d8-812f-4570-b9fc-175e8342bda4.png" style="
+              width: 100%;" />
+            </section><section style="background: rgb(237, 249, 235); padding: 11px 20px 13px 26px;">
+              ${autoId == true ? storeH1.toString().padStart(2, `0`) : ""}${text}
+            </section></h1>`;
           case 2:
-            return `<h2 ${getStyles("h2")}>${text}</h2>`;
+            storeH2 += 1;
+            storeH3 = 0;
+            return `<h2 ${getStyles("h2")}>${autoId != true ? storeH2.toString() : ""}. ${text}</h2>`;
           case 3:
-            return `<h3 ${getStyles("h3")}>${text}</h3>`;
+            storeH3 += 1;
+            storeH4 = 0;
+            return `<h3 ${getStyles("h3")}>${autoId == true ? storeH3.toString().padStart(2, `0`) : ""}${text}</h3>`;
           default:
-            return `<h4 ${getStyles("h4")}>${text}</h4>`;
+            storeH4 += 1;
+            return `<h4 ${getStyles("h4")}>${autoId == true ? storeH4.toString().padStart(2, `0`) : ""}${text}</h4>`;
         }
       };
       renderer.paragraph = (text) => {

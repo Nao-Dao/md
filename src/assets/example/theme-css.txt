@@ -6,18 +6,12 @@ h1 {
 }
 /* 二级标题样式 */
 h2 {
-  margin: 1em auto;
-  color: rgb(24, 129, 87);
-  background-color: rgb(180, 193, 202) !important;
-  padding: 6px;
 }
 /* 三级标题样式 */
 h3 {
-  border-left: 3px solid rgb(24, 129, 87);
 }
 /* 四级标题样式 */
 h4 {
-  color: rgb(24, 129, 87);
 }
 /* 图片样式 */
 image {
@@ -40,11 +34,18 @@ hr {
 }
 /* 行内代码样式 */
 codespan {
-  color: rgb(24, 129, 87);
+  color: #BE5123;
+  word-break: break-word;
 }
 /* 粗体样式 */
 strong {
-  color: rgb(24, 129, 87);
+  font-family: Optima-Regular, PingFangTC-light;
+  letter-spacing: 2px;
+  background-color: rgb(24, 129, 87);
+  color: rgb(255, 255, 255);
+  box-sizing: border-box !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word;
 }
 /* 链接样式 */
 link {
@@ -64,5 +65,4 @@ li {
 }
 /* 代码块样式 */
 code {
-  color: rgb(24, 129, 87);
 }
