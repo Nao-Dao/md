@@ -164,13 +164,13 @@ class WxRenderer {
       renderer.listitem = (text) =>
         `<li ${getStyles(
           "listitem"
-        )}><span><%s/></span>${text}</li>`;
+        )}><%s/><span style='vertical-align: middle;'>${text}</span></li>`;
 
       renderer.list = (text, ordered, start) => {
         text = text.replace(/<\/*p .*?>/g, "").replace(/<\/*p>/g, "");
         let segments = text.split(`<%s/>`);
         if (!ordered) {
-          text = segments.join("• ");
+          text = segments.join("<span style='font-size: 20px; vertical-align: middle; color: rgb(24, 129, 87);'>※ </span>");
           return `<ul ${getStyles("ul")}>${text}</ul>`;
         }
         text = segments[0];

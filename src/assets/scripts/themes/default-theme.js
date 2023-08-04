@@ -106,7 +106,7 @@ export default {
     },
 
     ul: {
-      'margin-left': `0`,
+      margin: `0 0 20px 10px`,
       'padding-left': `1em`,
       'list-style': `circle`,
       color: baseColor,
